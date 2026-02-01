@@ -10,4 +10,4 @@ Este é um projeto de lista de tarefas desenvolvido em Python usando Flask e SQL
 
 ## Demonstração
 
-![Screenshot do Projeto](./static/screenshot.png)
+![Screenshot do Projeto](./img/screenshot.png)
