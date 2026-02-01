@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Tarefas</title>
+    <style>
+        body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; }
+        .concluida { text-decoration: line-through; color: #888; }
+        .estatisticas { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; }
+        
+        /* Estilos da Barra de Progresso */
+        .barra-fundo { width: 100%; background: #eee; border-radius: 10px; height: 15px; margin: 10px 0; border: 1px solid #ccc; overflow: hidden; }
+        .barra-cor { 
+            height: 100%; 
+            background: #28a745; 
+            transition: width 0.5s; 
+            /* Definindo a largura aqui o VS Code para de reclamar na linha 24 */
+            width: {{ progresso }}%; 
+        }
+
+        ul { list-style: none; padding: 0; }
+        li { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .info { flex-grow: 1; margin-left: 10px; }
+        .btn-limpar { display: block; margin-top: 25px; color: #dc3545; text-decoration: none; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Lista de Tarefas</h1>
+
+    <div class="estatisticas">
+        <strong>Resumo:</strong> Total: {{ total }} | ✅ {{ feitas }} | ⏳ {{ faltam }}
+        <div class="barra-fundo">
+            <div class="barra-cor"></div>
+        </div>
+        <small>{{ progresso }}% concluído</small>
+    </div>
+
+    <form action="/adicionar" method="POST">
+        <input type="text" name="tarefa" placeholder="Nova tarefa..." required style="width: 70%; padding: 8px;">
+        <button type="submit" style="padding: 8px; cursor: pointer;">Adicionar</button>
+    </form>
+
+    <ul>
+        {% for t in tarefas %}
+        <li>
+            <input type="checkbox" {% if t.concluida %}checked{% endif %} 
+                   onclick="window.location.href='/concluir/{{ t.id }}'">
+            
+            <span class="info {{ 'concluida' if t.concluida else '' }}">
+                {{ t.conteudo }}
+            </span>
+
+            <div>
+                <a href="{{ url_for('editar', id=t.id) }}" style="text-decoration: none;">✏️</a>
+                <a href="{{ url_for('excluir', id=t.id) }}" style="text-decoration: none; margin-left: 10px;">❌</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+        </ul>
+
+    {% if tarefas %}
+        <a href="{{ url_for('limpar_tudo') }}" class="btn-limpar" onclick="return confirm('Apagar tudo?');">
+            🗑️ Limpar Tudo
+        </a>
+    {% endif %} 
+    
+</body>
+</html>
+
+    
